@@ -1,0 +1,174 @@
+{
+  "cases": [
+    {
+      "id": 1,
+      "title": "من يكون؟",
+      "code": "SCREAM001",
+      "images": [
+        "cases/case1/image1.jpg",
+        "cases/case1/image2.jpg",
+        "cases/case1/image3.jpg",
+        "cases/case1/image4.jpg",
+        "cases/case1/image5.jpg",
+        "cases/case1/image6.jpg",
+        "cases/case1/image7.jpg",
+        "cases/case1/image8.jpg"
+      ],
+      "pdf": "cases/case1/case1.pdf",
+      "difficulty": 1
+    },
+    {
+      "id": 2,
+      "title": "ملف الذكاء",
+      "code": "GHOSTFACE",
+      "images": [
+        "cases/case2/image1.jpg",
+        "cases/case2/image2.jpg",
+        "cases/case2/image3.jpg",
+        "cases/case2/image4.jpg",
+        "cases/case2/image5.jpg",
+        "cases/case2/image6.jpg",
+        "cases/case2/image7.jpg",
+        "cases/case2/image8.jpg"
+      ],
+      "pdf": "cases/case2/case2.pdf",
+      "difficulty": 2
+    },
+    {
+      "id": 3,
+      "title": "ملف الملف الشخصي",
+      "code": "PROFILE99",
+      "images": [
+        "cases/case3/image1.jpg",
+        "cases/case3/image2.jpg",
+        "cases/case3/image3.jpg",
+        "cases/case3/image4.jpg",
+        "cases/case3/image5.jpg",
+        "cases/case3/image6.jpg",
+        "cases/case3/image7.jpg",
+        "cases/case3/image8.jpg"
+      ],
+      "pdf": "cases/case3/case3.pdf",
+      "difficulty": 3
+    },
+    {
+      "id": 4,
+      "title": "الأدلة",
+      "code": "EVIDENCE1",
+      "images": [
+        "cases/case4/image1.jpg",
+        "cases/case4/image2.jpg",
+        "cases/case4/image3.jpg",
+        "cases/case4/image4.jpg",
+        "cases/case4/image5.jpg",
+        "cases/case4/image6.jpg",
+        "cases/case4/image7.jpg",
+        "cases/case4/image8.jpg"
+      ],
+      "pdf": "cases/case4/case4.pdf",
+      "difficulty": 4
+    },
+    {
+      "id": 5,
+      "title": "الكيمياء",
+      "code": "CHEMICAL2",
+      "images": [
+        "cases/case5/image1.jpg",
+        "cases/case5/image2.jpg",
+        "cases/case5/image3.jpg",
+        "cases/case5/image4.jpg",
+        "cases/case5/image5.jpg",
+        "cases/case5/image6.jpg",
+        "cases/case5/image7.jpg",
+        "cases/case5/image8.jpg"
+      ],
+      "pdf": "cases/case5/case5.pdf",
+      "difficulty": 5
+    },
+    {
+      "id": 6,
+      "title": "أدلة الجريمة",
+      "code": "EVIDENCE3",
+      "images": [
+        "cases/case6/image1.jpg",
+        "cases/case6/image2.jpg",
+        "cases/case6/image3.jpg",
+        "cases/case6/image4.jpg",
+        "cases/case6/image5.jpg",
+        "cases/case6/image6.jpg",
+        "cases/case6/image7.jpg",
+        "cases/case6/image8.jpg"
+      ],
+      "pdf": "cases/case6/case6.pdf",
+      "difficulty": 6
+    },
+    {
+      "id": 7,
+      "title": "خط الدم",
+      "code": "BLOODLINE",
+      "images": [
+        "cases/case7/image1.jpg",
+        "cases/case7/image2.jpg",
+        "cases/case7/image3.jpg",
+        "cases/case7/image4.jpg",
+        "cases/case7/image5.jpg",
+        "cases/case7/image6.jpg",
+        "cases/case7/image7.jpg",
+        "cases/case7/image8.jpg"
+      ],
+      "pdf": "cases/case7/case7.pdf",
+      "difficulty": 7
+    },
+    {
+      "id": 8,
+      "title": "التحليل الجنائي",
+      "code": "FORENSICS",
+      "images": [
+        "cases/case8/image1.jpg",
+        "cases/case8/image2.jpg",
+        "cases/case8/image3.jpg",
+        "cases/case8/image4.jpg",
+        "cases/case8/image5.jpg",
+        "cases/case8/image6.jpg",
+        "cases/case8/image7.jpg",
+        "cases/case8/image8.jpg"
+      ],
+      "pdf": "cases/case8/case8.pdf",
+      "difficulty": 8
+    },
+    {
+      "id": 9,
+      "title": "الضحية",
+      "code": "VICTIM666",
+      "images": [
+        "cases/case9/image1.jpg",
+        "cases/case9/image2.jpg",
+        "cases/case9/image3.jpg",
+        "cases/case9/image4.jpg",
+        "cases/case9/image5.jpg",
+        "cases/case9/image6.jpg",
+        "cases/case9/image7.jpg",
+        "cases/case9/image8.jpg"
+      ],
+      "pdf": "cases/case9/case9.pdf",
+      "difficulty": 9
+    },
+    {
+      "id": 10,
+      "title": "المشتبه به النهائي",
+      "code": "SUSPECT42",
+      "images": [
+        "cases/case10/image1.jpg",
+        "cases/case10/image2.jpg",
+        "cases/case10/image3.jpg",
+        "cases/case10/image4.jpg",
+        "cases/case10/image5.jpg",
+        "cases/case10/image6.jpg",
+        "cases/case10/image7.jpg",
+        "cases/case10/image8.jpg"
+      ],
+      "pdf": "cases/case10/case10.pdf",
+      "difficulty": 10
+    }
+  ]
+}
