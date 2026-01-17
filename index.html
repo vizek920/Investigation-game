@@ -3,1039 +3,356 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لعبة التحقيق - النسخة المحسّنة</title>
+    <title>THE COLOSSEUM - تحقيق الشفرات</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body {
-            font-family: 'Arial', sans-serif;
-            transition: 0.3s;
-        }
-        
-        body.dark {
-            background: linear-gradient(135deg, #0a0e27, #1a1a3e);
-            color: white;
-        }
-        
-        body.light {
-            background: linear-gradient(135deg, #f5f5f5, #ffffff);
-            color: black;
-        }
-        
+        body { font-family: 'Georgia', serif; background: linear-gradient(135deg, #0a0e27, #1a1a3e); color: #fff; }
+        .header { text-align: center; padding: 20px; border-bottom: 3px solid #d4af37; }
+        .header h1 { font-size: 2.5em; background: linear-gradient(135deg, #d4af37, #ffd700); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; letter-spacing: 3px; }
+        .timer-bar { background: rgba(212, 175, 55, 0.2); border: 2px solid #d4af37; padding: 15px; text-align: center; font-size: 1.5em; color: #d4af37; font-weight: bold; display: none; margin-top: 15px; }
+        .timer-bar.active { display: block; }
+        .timer-bar.warning { color: #ff6b6b; border-color: #ff6b6b; }
         .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-        
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px;
-            background: rgba(255, 107, 53, 0.15);
-            border-radius: 10px;
-            margin-bottom: 30px;
-        }
-        
-        .header h1 {
-            font-size: 2.5em;
-            background: linear-gradient(to right, #ff6b35, #ffd700);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
-        .theme-btn {
-            padding: 10px 20px;
-            background: #ff6b35;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1em;
-        }
-        
         .screen { display: none; }
         .screen.active { display: block; }
-        
-        /* Login */
-        .login-screen {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 70vh;
-        }
-        
-        .login-box {
-            background: rgba(255, 107, 53, 0.1);
-            border: 2px solid #ff6b35;
-            padding: 40px;
-            border-radius: 15px;
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-        }
-        
-        .login-box h2 {
-            color: #ff6b35;
-            margin-bottom: 30px;
-            font-size: 2em;
-        }
-        
-        .login-box input {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 20px;
-            border: 2px solid #ff6b35;
-            border-radius: 5px;
-            font-size: 1em;
-            background: rgba(255, 255, 255, 0.1);
-            color: inherit;
-        }
-        
-        .login-box button {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(to right, #ff6b35, #f7931e);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 1.1em;
-            cursor: pointer;
-        }
-        
-        /* Teams */
-        .teams-title {
-            text-align: center;
-            font-size: 2em;
-            color: #ff6b35;
-            margin-bottom: 30px;
-        }
-        
-        .teams-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-        
-        .team-card {
-            background: rgba(255, 107, 53, 0.1);
-            border: 2px solid #ff6b35;
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .team-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.3);
-        }
-        
-        .team-card.selected {
-            background: rgba(255, 215, 0, 0.2);
-            border-color: #ffd700;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-        }
-        
-        .team-card h3 {
-            color: #ff6b35;
-            margin-bottom: 10px;
-        }
-        
-        .team-members {
-            font-size: 0.9em;
-            margin: 10px 0;
-        }
-        
-        .team-members p {
-            margin: 5px 0;
-        }
-        
-        .leader-badge {
-            color: #ffd700;
-            font-weight: bold;
-            margin: 5px 0;
-        }
-        
-        .team-actions {
-            margin-top: 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        
-        .team-actions input {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ff6b35;
-            border-radius: 5px;
-            background: rgba(255, 255, 255, 0.1);
-            color: inherit;
-            font-size: 0.85em;
-        }
-        
-        .team-btn {
-            background: #ff6b35;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.85em;
-            transition: all 0.3s;
-        }
-        
-        .team-btn:hover {
-            background: #f7931e;
-        }
-        
-        .team-btn.danger {
-            background: #ff4444;
-        }
-        
-        .start-btn {
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(to right, #ffd700, #ff6b35);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 1.2em;
-            cursor: pointer;
-            margin-top: 20px;
-            display: none;
-        }
-        
-        .start-btn.show {
-            display: block;
-        }
-        
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-        }
-        
-        .modal.show {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .modal-content {
-            background: rgba(255, 107, 53, 0.1);
-            border: 2px solid #ff6b35;
-            padding: 30px;
-            border-radius: 10px;
-            max-width: 400px;
-            width: 90%;
-            text-align: center;
-        }
-        
-        .modal-content h3 {
-            color: #ff6b35;
-            margin-bottom: 20px;
-        }
-        
-        .modal-content p {
-            margin-bottom: 20px;
-            font-size: 1.1em;
-        }
-        
-        .modal-buttons {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-        }
-        
-        .modal-btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1em;
-        }
-        
-        .modal-confirm {
-            background: #4CAF50;
-            color: white;
-        }
-        
-        .modal-cancel {
-            background: #888;
-            color: white;
-        }
-        
-        /* Leader Selection */
-        .leader-selection {
-            background: rgba(255, 107, 53, 0.1);
-            border: 2px solid #ff6b35;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 20px;
-        }
-        
-        .leader-selection h4 {
-            color: #ff6b35;
-            margin-bottom: 15px;
-        }
-        
-        .leader-options {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        
-        .leader-option {
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid #ff6b35;
-            padding: 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .leader-option:hover {
-            background: rgba(255, 107, 53, 0.2);
-        }
-        
-        .leader-option.selected {
-            background: rgba(255, 215, 0, 0.3);
-            border-color: #ffd700;
-        }
-        
-        .leader-option input[type="radio"] {
-            margin-left: 10px;
-        }
-        
-        /* Challenge */
-        .challenge-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(255, 107, 53, 0.1);
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-        
-        .timer {
-            font-size: 2em;
-            font-weight: bold;
-            color: #ff6b35;
-        }
-        
-        .timer.danger {
-            color: #ff0000;
-            animation: pulse 1s infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-        
-        .team-info {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 5px;
-        }
-        
-        .team-name {
-            font-size: 1.2em;
-            color: #ffd700;
-            font-weight: bold;
-        }
-        
-        .team-leader {
-            font-size: 0.9em;
-            color: #ff6b35;
-        }
-        
-        .case-box {
-            background: rgba(255, 107, 53, 0.1);
-            border: 2px solid #ff6b35;
-            padding: 30px;
-            border-radius: 15px;
-        }
-        
-        .case-title {
-            font-size: 1.8em;
-            color: #ff6b35;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        
-        .images-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        
-        .image-box {
-            width: 100%;
-            height: 120px;
-            background: rgba(255, 107, 53, 0.2);
-            border: 2px solid #ff6b35;
-            border-radius: 8px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .image-box:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.4);
-        }
-        
-        .image-box img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .pdf-btn {
-            width: 100%;
-            padding: 12px;
-            background: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-bottom: 15px;
-            font-size: 1em;
-            transition: all 0.3s;
-        }
-        
-        .pdf-btn:hover {
-            background: #45a049;
-            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
-        }
-        
-        .code-input {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #ff6b35;
-            border-radius: 5px;
-            font-size: 1.1em;
-            background: rgba(255, 255, 255, 0.1);
-            color: inherit;
-            text-align: center;
-            text-transform: uppercase;
-            margin-bottom: 10px;
-        }
-        
-        .code-btn {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(to right, #ff6b35, #f7931e);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 1.1em;
-            cursor: pointer;
-        }
-        
-        .message {
-            text-align: center;
-            margin-top: 10px;
-            font-weight: bold;
-            min-height: 25px;
-            font-size: 1.1em;
-        }
-        
-        .message.success {
-            color: #4CAF50;
-        }
-        
-        .message.error {
-            color: #ff0000;
-            animation: shake 0.3s;
-        }
-        
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
-        }
-        
-        .progress {
-            text-align: center;
-            margin-top: 20px;
-            color: #ff6b35;
-            font-size: 1.1em;
-        }
-        
-        .star {
-            position: fixed;
-            pointer-events: none;
-            font-size: 2em;
-            animation: starburst 1.5s ease-out forwards;
-            z-index: 9999;
-        }
-        
-        @keyframes starburst {
-            0% { opacity: 1; transform: translate(0, 0) scale(1); }
-            100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(0); }
-        }
-        
-        /* Leaderboard */
-        .leaderboard-title {
-            font-size: 2.5em;
-            text-align: center;
-            color: #ff6b35;
-            margin-bottom: 30px;
-            animation: glow 2s infinite;
-        }
-        
-        @keyframes glow {
-            0%, 100% { text-shadow: 0 0 20px rgba(255, 107, 53, 0.5); }
-            50% { text-shadow: 0 0 40px rgba(255, 215, 0, 0.8); }
-        }
-        
-        .leaderboard-table {
-            width: 100%;
-            border-collapse: collapse;
-            background: rgba(255, 107, 53, 0.1);
-            border: 2px solid #ff6b35;
-            border-radius: 10px;
-            overflow: hidden;
-            margin-bottom: 30px;
-        }
-        
-        .leaderboard-table th,
-        .leaderboard-table td {
-            padding: 15px;
-            text-align: center;
-            border-bottom: 1px solid #ff6b35;
-        }
-        
-        .leaderboard-table th {
-            background: rgba(255, 107, 53, 0.2);
-            color: #ff6b35;
-            font-weight: bold;
-        }
-        
-        .restart-btn {
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(to right, #ffd700, #ff6b35);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 1.2em;
-            cursor: pointer;
-            margin-top: 20px;
-        }
-        
-        /* Fail */
-        .fail-box {
-            text-align: center;
-            padding: 60px 20px;
-        }
-        
-        .fail-title {
-            font-size: 3em;
-            color: #ff0000;
-            margin-bottom: 30px;
-            animation: pulse 1s infinite;
-        }
-        
-        .fail-details {
-            background: rgba(255, 107, 53, 0.1);
-            border: 2px solid #ff6b35;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            font-size: 1.2em;
-        }
-        
-        @media (max-width: 768px) {
-            .images-grid { grid-template-columns: repeat(2, 1fr); }
-            .teams-grid { grid-template-columns: 1fr; }
-            .challenge-header { flex-direction: column; gap: 10px; }
-            .team-info { align-items: center; }
-        }
+        .login-container { display: flex; justify-content: center; align-items: center; min-height: 60vh; }
+        .login-box { background: rgba(212, 175, 55, 0.1); border: 3px solid #d4af37; padding: 50px; border-radius: 10px; width: 100%; max-width: 500px; text-align: center; }
+        .login-box h2 { color: #d4af37; margin-bottom: 30px; font-size: 2em; letter-spacing: 2px; }
+        .login-box input { width: 100%; padding: 15px; margin-bottom: 20px; border: 2px solid #d4af37; border-radius: 5px; font-size: 1.1em; background: rgba(255, 255, 255, 0.05); color: #fff; text-align: center; }
+        .login-box button { width: 100%; padding: 15px; background: linear-gradient(135deg, #d4af37, #ffd700); color: #000; border: none; border-radius: 5px; font-size: 1.2em; font-weight: bold; cursor: pointer; }
+        .login-box button:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(212, 175, 55, 0.8); }
+        .teams-title { text-align: center; font-size: 2.5em; color: #d4af37; margin-bottom: 30px; letter-spacing: 2px; }
+        .teams-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .team-card { background: rgba(212, 175, 55, 0.1); border: 2px solid #d4af37; padding: 25px; border-radius: 10px; cursor: pointer; transition: all 0.3s; text-align: center; }
+        .team-card:hover:not(.disabled) { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(212, 175, 55, 0.5); border-color: #ffd700; }
+        .team-card.selected { background: rgba(212, 175, 55, 0.3); border-color: #ffd700; box-shadow: 0 0 30px rgba(212, 175, 55, 0.8); }
+        .team-card.disabled { opacity: 0.4; cursor: not-allowed; background: rgba(100, 100, 100, 0.1); border-color: #666; }
+        .team-card h3 { color: #d4af37; margin-bottom: 15px; font-size: 1.5em; }
+        .team-status { margin: 15px 0; font-size: 0.95em; line-height: 1.6; }
+        .team-actions { margin-top: 15px; }
+        .team-btn { background: #d4af37; color: #000; border: none; padding: 10px; border-radius: 5px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 8px; transition: all 0.3s; }
+        .team-btn:hover { background: #ffd700; transform: scale(1.05); }
+        .reserved-badge { color: #ff6b6b; font-weight: bold; margin-top: 10px; }
+        .available-badge { color: #4CAF50; font-weight: bold; margin-top: 10px; }
+        .start-btn { width: 100%; padding: 20px; background: linear-gradient(135deg, #d4af37, #ffd700); color: #000; border: none; border-radius: 5px; font-size: 1.3em; font-weight: bold; cursor: pointer; margin-top: 30px; display: none; }
+        .start-btn.show { display: block; }
+        .start-btn:hover { transform: scale(1.05); box-shadow: 0 0 30px rgba(212, 175, 55, 0.8); }
+        .code-container { background: rgba(0, 0, 0, 0.85); border: 3px solid #d4af37; padding: 50px; border-radius: 10px; max-width: 600px; margin: 30px auto; text-align: center; box-shadow: 0 0 50px rgba(212, 175, 55, 0.5); }
+        .code-container h2 { color: #d4af37; font-size: 2em; margin-bottom: 20px; letter-spacing: 2px; }
+        .team-info { font-size: 1.1em; color: #ffd700; margin-bottom: 20px; }
+        .code-input { width: 100%; padding: 15px; border: 2px solid #d4af37; border-radius: 5px; font-size: 1.2em; background: rgba(255, 255, 255, 0.05); color: #d4af37; text-align: center; text-transform: uppercase; letter-spacing: 2px; margin: 20px 0; }
+        .code-btn { width: 100%; padding: 15px; background: linear-gradient(135deg, #d4af37, #ffd700); color: #000; border: none; border-radius: 5px; font-size: 1.2em; font-weight: bold; cursor: pointer; }
+        .code-btn:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(212, 175, 55, 0.8); }
+        .message { margin-top: 20px; font-size: 1.1em; font-weight: bold; min-height: 30px; line-height: 1.5; }
+        .message.success { color: #4CAF50; }
+        .message.error { color: #ff6b6b; }
+        .images-screen { background: linear-gradient(135deg, #2a2520, #3d3935); min-height: 100vh; padding-top: 20px; }
+        .images-container { background: rgba(0, 0, 0, 0.8); border: 3px solid #d4af37; padding: 40px; border-radius: 10px; max-width: 1000px; margin: 20px auto; box-shadow: 0 0 50px rgba(212, 175, 55, 0.5); }
+        .images-title { color: #d4af37; font-size: 2em; text-align: center; margin-bottom: 30px; letter-spacing: 2px; }
+        .images-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .image-box { width: 100%; height: 200px; background: rgba(212, 175, 55, 0.1); border: 2px solid #d4af37; border-radius: 8px; overflow: hidden; cursor: pointer; transition: all 0.3s; position: relative; }
+        .image-box:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(212, 175, 55, 0.5); }
+        .image-box img { width: 100%; height: 100%; object-fit: cover; }
+        .image-label { position: absolute; top: 10px; right: 10px; background: rgba(212, 175, 55, 0.9); color: #000; padding: 5px 10px; border-radius: 5px; font-size: 0.8em; font-weight: bold; }
+        .button-group { text-align: center; margin-top: 30px; }
+        .download-btn, .back-btn { padding: 12px 25px; font-size: 1em; border: none; border-radius: 5px; cursor: pointer; margin: 10px; font-weight: bold; transition: all 0.3s; }
+        .download-btn { background: linear-gradient(135deg, #4CAF50, #45a049); color: white; }
+        .download-btn:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(76, 175, 80, 0.6); }
+        .back-btn { background: #d4af37; color: #000; }
+        .back-btn:hover { background: #ffd700; transform: scale(1.05); }
+        .admin-container { background: rgba(212, 175, 55, 0.1); border: 3px solid #d4af37; padding: 40px; border-radius: 10px; max-width: 600px; margin: 50px auto; text-align: center; }
+        .admin-container h2 { color: #d4af37; margin-bottom: 30px; font-size: 2em; }
+        .admin-btn { width: 100%; padding: 15px; background: #d4af37; color: #000; border: none; border-radius: 5px; font-size: 1.1em; cursor: pointer; margin: 10px 0; font-weight: bold; transition: all 0.3s; }
+        .admin-btn:hover { background: #ffd700; transform: scale(1.05); }
+        .admin-btn.danger { background: #ff6b6b; color: white; }
+        .admin-btn.danger:hover { background: #ff5252; }
+        .stats-table { width: 100%; color: #d4af37; margin-top: 20px; border-collapse: collapse; }
+        .stats-table th, .stats-table td { border: 1px solid #d4af37; padding: 12px; text-align: center; }
+        .stats-table th { background: rgba(212, 175, 55, 0.2); }
     </style>
 </head>
-<body class="dark">
-    <div class="container">
-        <div class="header">
-            <h1>🔍 لعبة التحقيق</h1>
-            <button class="theme-btn" onclick="toggleTheme()">🌓</button>
+<body>
+    <div class="header">
+        <h1>🔍 THE COLOSSEUM</h1>
+        <div class="timer-bar" id="timerBar">
+            ⏱️ <span id="timerDisplay">02:00:00</span>
         </div>
-        
-        <!-- Login -->
+    </div>
+
+    <div class="container">
         <div class="screen active" id="loginScreen">
-            <div class="login-screen">
+            <div class="login-container">
                 <div class="login-box">
-                    <h2>🎮 مرحباً</h2>
-                    <input type="text" id="userName" placeholder="أدخل اسمك" onkeypress="if(event.key==='Enter') goToTeams()">
+                    <h2>تسجيل الدخول</h2>
+                    <input type="text" id="userNameInput" placeholder="أدخل اسمك الكامل" onkeypress="if(event.key==='Enter') goToTeams()">
                     <button onclick="goToTeams()">دخول</button>
                 </div>
             </div>
         </div>
-        
-        <!-- Teams -->
+
         <div class="screen" id="teamsScreen">
             <h2 class="teams-title">👥 اختر فريقك</h2>
-            <div class="teams-grid" id="teamsContainer"></div>
-            <button class="start-btn" id="startBtn" onclick="startChallenge()">▶️ ابدأ التحدي</button>
+            <div class="teams-grid" id="teamsGrid"></div>
+            <button class="start-btn" id="startBtn" onclick="startGame()">▶️ ابدأ التحقيق</button>
         </div>
-        
-        <!-- Challenge -->
-        <div class="screen" id="challengeScreen">
-            <div class="challenge-header">
-                <div class="timer" id="timerDisplay">02:00:00</div>
-                <div class="team-info">
-                    <div class="team-name" id="currentTeamName"></div>
-                    <div class="team-leader" id="leaderInfo"></div>
+
+        <div class="screen" id="codeScreen">
+            <div class="code-container">
+                <h2>🔐 حل الشفرة</h2>
+                <div class="team-info" id="teamInfoCode"></div>
+                <input type="text" id="codeInput" class="code-input" placeholder="أدخل الشفرة" onkeypress="if(event.key==='Enter') verifyCode()">
+                <button class="code-btn" onclick="verifyCode()">✓ تحقق من الشفرة</button>
+                <div class="message" id="codeMessage"></div>
+            </div>
+        </div>
+
+        <div class="screen images-screen" id="imagesScreen">
+            <div class="images-container">
+                <h2 class="images-title">📋 ملفات القضية</h2>
+                <div class="images-grid" id="imagesGrid"></div>
+                <div class="button-group">
+                    <button class="download-btn" onclick="downloadAllImages()">📥 تحميل الصور</button>
+                    <button class="back-btn" onclick="backToTeams()">العودة</button>
                 </div>
             </div>
-            <div class="case-box" id="caseBox"></div>
         </div>
-        
-        <!-- Leaderboard -->
-        <div class="screen" id="leaderboardScreen">
-            <h2 class="leaderboard-title">🏆 لوحة المتصدرين</h2>
-            <table class="leaderboard-table">
-                <thead>
-                    <tr>
-                        <th>🥇</th>
-                        <th>الفريق</th>
-                        <th>القائد</th>
-                        <th>المحاولات</th>
-                        <th>القضايا</th>
-                        <th>النتيجة</th>
-                    </tr>
-                </thead>
-                <tbody id="leaderboardBody"></tbody>
-            </table>
-            <button class="restart-btn" onclick="location.reload()">🔄 إعادة اللعبة</button>
-        </div>
-        
-        <!-- Fail -->
-        <div class="screen" id="failScreen">
-            <div class="fail-box">
-                <div class="fail-title">⏰ انتهى الوقت!</div>
-                <div class="fail-details" id="failDetails"></div>
-                <button class="restart-btn" onclick="location.reload()">🔄 العودة</button>
+
+        <div class="screen" id="adminScreen">
+            <div class="admin-container">
+                <h2>🔑 لوحة المسؤول</h2>
+                <button class="admin-btn" onclick="showStats()">📊 إحصائيات اللعبة</button>
+                <button class="admin-btn danger" onclick="resetGame()">🔄 إعادة تعيين اللعبة</button>
+                <button class="admin-btn" onclick="backToLogin()">🚪 تسجيل الخروج</button>
             </div>
+            <div id="statsContainer"></div>
         </div>
     </div>
-    
-    <!-- Confirmation Modal -->
-    <div class="modal" id="confirmModal">
-        <div class="modal-content">
-            <h3 id="modalTitle">تأكيد</h3>
-            <p id="modalMessage"></p>
-            <div class="modal-buttons">
-                <button class="modal-btn modal-confirm" onclick="confirmAction()">نعم، متأكد</button>
-                <button class="modal-btn modal-cancel" onclick="cancelAction()">إلغاء</button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Leader Selection Modal -->
-    <div class="modal" id="leaderModal">
-        <div class="modal-content" style="max-width: 500px;">
-            <h3>اختر قائد الفريق</h3>
-            <p>من سيكون قائد الفريق <strong id="teamNameForLeader"></strong>؟</p>
-            <div class="leader-options" id="leaderOptions"></div>
-            <div class="modal-buttons" style="margin-top: 20px;">
-                <button class="modal-btn modal-confirm" onclick="confirmLeader()">تأكيد</button>
-            </div>
-        </div>
-    </div>
-    
+
     <script>
-        let user = null, team = null, selectedLeader = null, caseIdx = 0, timer = null, timeLeft = 7200;
-        let stats = {}, allStats = {};
-        let pendingAction = null, pendingTeamId = null;
-        
-        const teams = Array(10).fill(0).map((_, i) => ({
-            id: i + 1, 
-            name: `الفريق ${i + 1}`, 
-            members: [], 
-            leader: null, 
-            teamName: null
+        const ADMIN_CODE = 'ADMIN2024';
+        const CODES = ['POWER', 'WISDOM', 'VALOR', 'PATIENCE', 'PROMPTITUDE', 'FAITH', 'HONESTY', 'JUSTICE', 'INTEGRITY', 'LOYALTY', 'CONFIDENCE'];
+        const TOTAL_TIME = 7200;
+
+        const teams = Array(11).fill(0).map((_, i) => ({
+            id: i + 1,
+            number: i + 1,
+            members: [],
+            leader: null,
+            codeIndex: i,
+            solved: false,
+            attempts: 0,
+            solveTime: null
         }));
-        
-        const cases = [
-            {id: 1, title: 'من يكون؟', code: 'SCREAM001'},
-            {id: 2, title: 'ملف الذكاء', code: 'GHOSTFACE'},
-            {id: 3, title: 'الملف الشخصي', code: 'PROFILE99'},
-            {id: 4, title: 'الأدلة', code: 'EVIDENCE1'},
-            {id: 5, title: 'الكيمياء', code: 'CHEMICAL2'},
-            {id: 6, title: 'أدلة الجريمة', code: 'EVIDENCE3'},
-            {id: 7, title: 'خط الدم', code: 'BLOODLINE'},
-            {id: 8, title: 'التحليل الجنائي', code: 'FORENSICS'},
-            {id: 9, title: 'الضحية', code: 'VICTIM666'},
-            {id: 10, title: 'المشتبه به', code: 'SUSPECT42'}
-        ];
-        
-        function toggleTheme() {
-            document.body.classList.toggle('dark');
-            document.body.classList.toggle('light');
+
+        let currentUser = null;
+        let currentTeam = null;
+        let gameStarted = false;
+        let timeRemaining = TOTAL_TIME;
+        let timerInterval = null;
+        let gameStartTime = null;
+
+        function loadGameState() {
+            const saved = localStorage.getItem('colosseum_game_state');
+            if (saved) {
+                const state = JSON.parse(saved);
+                teams.forEach(t => {
+                    const savedTeam = state.teams.find(st => st.id === t.id);
+                    if (savedTeam) {
+                        t.members = savedTeam.members;
+                        t.leader = savedTeam.leader;
+                        t.solved = savedTeam.solved;
+                        t.attempts = savedTeam.attempts;
+                    }
+                });
+                if (state.gameStarted) {
+                    gameStarted = true;
+                    gameStartTime = new Date(state.gameStartTime);
+                    const elapsed = Math.floor((Date.now() - gameStartTime) / 1000);
+                    timeRemaining = Math.max(0, TOTAL_TIME - elapsed);
+                    if (timeRemaining > 0) startTimer();
+                }
+            }
         }
-        
+
+        function saveGameState() {
+            const state = {
+                teams: teams.map(t => ({id: t.id, members: t.members, leader: t.leader, solved: t.solved, attempts: t.attempts})),
+                gameStarted: gameStarted,
+                gameStartTime: gameStartTime?.toISOString() || null,
+                timeRemaining: timeRemaining
+            };
+            localStorage.setItem('colosseum_game_state', JSON.stringify(state));
+        }
+
         function goToTeams() {
-            user = document.getElementById('userName').value.trim();
-            if (!user) return alert('أدخل اسمك');
+            const userName = document.getElementById('userNameInput').value.trim();
+            if (!userName) { alert('أدخل اسمك'); return; }
+            if (userName === ADMIN_CODE) { showScreen('adminScreen'); return; }
+            currentUser = userName;
             showScreen('teamsScreen');
             renderTeams();
         }
-        
+
         function renderTeams() {
-            let html = '';
-            teams.forEach(t => {
-                const isMember = t.members.includes(user);
-                const isLeader = t.leader === user;
-                
-                html += `<div class="team-card ${team && team.id === t.id ? 'selected' : ''}">
-                    <h3>${t.teamName || t.name}</h3>
-                    <div class="team-members">
-                        <p>👥 الأعضاء: ${t.members.length}/4</p>
-                        ${t.members.length > 0 ? `<p style="font-size:0.8em">${t.members.join(', ')}</p>` : ''}
-                        ${t.leader ? `<p class="leader-badge">⭐ القائد: ${t.leader}</p>` : '<p style="color:#999">بلا قائد</p>'}
-                    </div>
-                    
-                    <div class="team-actions">
-                        ${isLeader ? `
-                            <input type="text" id="teamName${t.id}" placeholder="اسم الفريق" value="${t.teamName || ''}" onchange="updateTeamName(${t.id})">
-                            <button class="team-btn" onclick="editTeam(${t.id})">✏️ تعديل الاسم</button>
-                        ` : ''}
-                        
-                        ${!isMember && t.members.length < 4 ? `<button class="team-btn" onclick="showLeaderSelection(${t.id})">✅ انضم</button>` : ''}
-                        
-                        ${isMember ? `<button class="team-btn danger" onclick="confirmLeaveTeam(${t.id})">❌ غادر</button>` : ''}
-                    </div>
-                </div>`;
+            const grid = document.getElementById('teamsGrid');
+            grid.innerHTML = '';
+            teams.forEach(team => {
+                const isSelected = currentTeam && currentTeam.id === team.id;
+                const isDisabled = team.members.length > 0 && !team.members.includes(currentUser);
+                const card = document.createElement('div');
+                card.className = `team-card ${isSelected ? 'selected' : ''} ${isDisabled ? 'disabled' : ''}`;
+                let statusHTML = '';
+                if (team.members.length > 0) {
+                    statusHTML = `<p style="color: #ffd700;">👥 ${team.members.join(', ')}</p>`;
+                    statusHTML += `<p class="reserved-badge">🔒 محجوز</p>`;
+                } else {
+                    statusHTML = `<p class="available-badge">✅ متاح</p>`;
+                }
+                if (team.leader) statusHTML += `<p style="color: #d4af37; margin-top: 8px;">⭐ القائد: ${team.leader}</p>`;
+                card.innerHTML = `<h3>الفريق ${team.number}</h3><div class="team-status"><p>الأعضاء: ${team.members.length}/4</p>${statusHTML}</div><div class="team-actions">${!isDisabled && !team.members.includes(currentUser) ? `<button class="team-btn" onclick="selectTeam(${team.id})">اختر الفريق</button>` : ''}${team.members.includes(currentUser) ? `<button class="team-btn" onclick="leaveTeam(${team.id})">غادر الفريق</button>` : ''}</div>`;
+                if (!isDisabled) card.onclick = () => selectTeam(team.id);
+                grid.appendChild(card);
             });
-            document.getElementById('teamsContainer').innerHTML = html;
         }
-        
-        function showLeaderSelection(teamId) {
-            const t = teams.find(tm => tm.id === teamId);
-            if (t.members.length === 0) {
-                // First member becomes leader automatically
-                t.members.push(user);
-                t.leader = user;
-                team = t;
-                selectedLeader = user;
-                document.getElementById('startBtn').classList.add('show');
-                renderTeams();
-            } else {
-                // Show modal to select leader
-                pendingTeamId = teamId;
-                document.getElementById('teamNameForLeader').textContent = t.teamName || t.name;
-                
-                let options = '<div class="leader-options">';
-                t.members.forEach(member => {
-                    options += `<label class="leader-option">
-                        <input type="radio" name="leader" value="${member}" onchange="selectLeaderOption('${member}')">
-                        ${member} ${t.leader === member ? '(القائد الحالي)' : ''}
-                    </label>`;
-                });
-                options += `<label class="leader-option" style="border: 2px dashed #ff6b35;">
-                    <input type="radio" name="leader" value="${user}" onchange="selectLeaderOption('${user}')">
-                    أنا (${user})
-                </label></div>`;
-                
-                document.getElementById('leaderOptions').innerHTML = options;
-                document.getElementById('leaderModal').classList.add('show');
+
+        function selectTeam(teamId) {
+            const team = teams.find(t => t.id === teamId);
+            if (team.members.length >= 4 && !team.members.includes(currentUser)) { alert('❌ الفريق ممتلئ!'); return; }
+            if (!team.members.includes(currentUser)) {
+                team.members.push(currentUser);
+                if (!team.leader) team.leader = currentUser;
+                saveGameState();
             }
-        }
-        
-        function selectLeaderOption(leader) {
-            selectedLeader = leader;
-            document.querySelectorAll('.leader-option').forEach(opt => {
-                opt.classList.remove('selected');
-            });
-            event.target.parentElement.classList.add('selected');
-        }
-        
-        function confirmLeader() {
-            if (!selectedLeader) return alert('اختر قائداً');
-            
-            const t = teams.find(tm => tm.id === pendingTeamId);
-            t.members.push(user);
-            t.leader = selectedLeader;
-            team = t;
-            
-            document.getElementById('leaderModal').classList.remove('show');
+            currentTeam = team;
             document.getElementById('startBtn').classList.add('show');
             renderTeams();
         }
-        
-        function updateTeamName(teamId) {
-            const t = teams.find(tm => tm.id === teamId);
-            const newName = document.getElementById(`teamName${teamId}`).value.trim();
-            if (newName) {
-                t.teamName = newName;
-                renderTeams();
-            }
-        }
-        
-        function editTeam(teamId) {
-            alert('تم تحديث اسم الفريق! ✅');
-            renderTeams();
-        }
-        
-        function confirmLeaveTeam(teamId) {
-            pendingTeamId = teamId;
-            pendingAction = 'leave';
-            const t = teams.find(tm => tm.id === teamId);
-            
-            document.getElementById('modalTitle').textContent = 'تأكيد المغادرة';
-            document.getElementById('modalMessage').textContent = 
-                `هل أنت متأكد من مغادرة فريق "${t.teamName || t.name}"؟ سيتم حذفك من الفريق.`;
-            document.getElementById('confirmModal').classList.add('show');
-        }
-        
-        function confirmAction() {
-            if (pendingAction === 'leave') {
-                leaveTeam(pendingTeamId);
-            }
-            document.getElementById('confirmModal').classList.remove('show');
-            pendingAction = null;
-            pendingTeamId = null;
-        }
-        
-        function cancelAction() {
-            document.getElementById('confirmModal').classList.remove('show');
-            document.getElementById('leaderModal').classList.remove('show');
-            pendingAction = null;
-            pendingTeamId = null;
-        }
-        
+
         function leaveTeam(teamId) {
-            const t = teams.find(tm => tm.id === teamId);
-            t.members = t.members.filter(m => m !== user);
-            if (t.leader === user) {
-                t.leader = t.members.length > 0 ? t.members[0] : null;
+            const team = teams.find(t => t.id === teamId);
+            team.members = team.members.filter(m => m !== currentUser);
+            if (team.leader === currentUser && team.members.length > 0) {
+                team.leader = team.members[0];
+            } else if (team.members.length === 0) {
+                team.leader = null;
             }
-            if (team && team.id === teamId) {
-                team = null;
+            if (currentTeam && currentTeam.id === teamId) {
+                currentTeam = null;
                 document.getElementById('startBtn').classList.remove('show');
             }
-            alert('تم حذفك من الفريق ✅');
+            saveGameState();
             renderTeams();
         }
-        
-        function startChallenge() {
-            if (!team || team.members.length === 0) return alert('اختر فريقاً');
-            
-            caseIdx = 0;
-            timeLeft = 7200;
-            stats = {attempts: 0, solved: 0};
-            allStats[team.id] = {
-                name: team.teamName || team.name, 
-                leader: team.leader,
-                attempts: 0, 
-                solved: 0, 
-                failed: false
-            };
-            
-            showScreen('challengeScreen');
-            document.getElementById('currentTeamName').textContent = `👥 ${team.teamName || team.name}`;
-            document.getElementById('leaderInfo').textContent = `⭐ القائد: ${team.leader}`;
-            startTimer();
-            showCase();
-        }
-        
-        function startTimer() {
-            clearInterval(timer);
-            timer = setInterval(() => {
-                timeLeft--;
-                updateTimer();
-                if (timeLeft === 300) alert('⚠️ تحذير: 5 دقائق فقط متبقية!');
-                if (timeLeft <= 0) endGame(false);
-            }, 1000);
-        }
-        
-        function updateTimer() {
-            let h = Math.floor(timeLeft / 3600);
-            let m = Math.floor((timeLeft % 3600) / 60);
-            let s = timeLeft % 60;
-            let timerEl = document.getElementById('timerDisplay');
-            timerEl.textContent = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
-            if (timeLeft <= 300) timerEl.classList.add('danger');
-        }
-        
-        // مسارات الصور - عدّلها حسب موقع الصور لديك
-        const imageUrls = {
-            1: ['https://via.placeholder.com/400x300?text=Case1+Image1', 
-                'https://via.placeholder.com/400x300?text=Case1+Image2',
-                'https://via.placeholder.com/400x300?text=Case1+Image3',
-                'https://via.placeholder.com/400x300?text=Case1+Image4',
-                'https://via.placeholder.com/400x300?text=Case1+Image5',
-                'https://via.placeholder.com/400x300?text=Case1+Image6',
-                'https://via.placeholder.com/400x300?text=Case1+Image7',
-                'https://via.placeholder.com/400x300?text=Case1+Image8'],
-            2: ['https://via.placeholder.com/400x300?text=Case2+Image1',
-                'https://via.placeholder.com/400x300?text=Case2+Image2',
-                'https://via.placeholder.com/400x300?text=Case2+Image3',
-                'https://via.placeholder.com/400x300?text=Case2+Image4',
-                'https://via.placeholder.com/400x300?text=Case2+Image5',
-                'https://via.placeholder.com/400x300?text=Case2+Image6',
-                'https://via.placeholder.com/400x300?text=Case2+Image7',
-                'https://via.placeholder.com/400x300?text=Case2+Image8'],
-            3: Array(8).fill('https://via.placeholder.com/400x300?text=Case3'),
-            4: Array(8).fill('https://via.placeholder.com/400x300?text=Case4'),
-            5: Array(8).fill('https://via.placeholder.com/400x300?text=Case5'),
-            6: Array(8).fill('https://via.placeholder.com/400x300?text=Case6'),
-            7: Array(8).fill('https://via.placeholder.com/400x300?text=Case7'),
-            8: Array(8).fill('https://via.placeholder.com/400x300?text=Case8'),
-            9: Array(8).fill('https://via.placeholder.com/400x300?text=Case9'),
-            10: Array(8).fill('https://via.placeholder.com/400x300?text=Case10')
-        };
-        
-        // مسارات الـ PDFs - عدّلها حسب موقع الملفات لديك
-        const pdfUrls = {
-            1: 'https://www.w3.org/WAI/WCAG21/Techniques/pdf/img/table.pdf',
-            2: 'https://www.w3.org/WAI/WCAG21/Techniques/pdf/img/table.pdf',
-            3: 'https://www.w3.org/WAI/WCAG21/Techniques/pdf/img/table.pdf',
-            4: 'https://www.w3.org/WAI/WCAG21/Techniques/pdf/img/table.pdf',
-            5: 'https://www.w3.org/WAI/WCAG21/Techniques/pdf/img/table.pdf',
-            6: 'https://www.w3.org/WAI/WCAG21/Techniques/pdf/img/table.pdf',
-            7: 'https://www.w3.org/WAI/WCAG21/Techniques/pdf/img/table.pdf',
-            8: 'https://www.w3.org/WAI/WCAG21/Techniques/pdf/img/table.pdf',
-            9: 'https://www.w3.org/WAI/WCAG21/Techniques/pdf/img/table.pdf',
-            10: 'https://www.w3.org/WAI/WCAG21/Techniques/pdf/img/table.pdf'
-        };
-        
-        function showCase() {
-            const c = cases[caseIdx];
-            
-            // الحصول على الصور من imageUrls
-            const caseImages = imageUrls[c.id] || Array(8).fill('https://via.placeholder.com/400x300?text=صورة');
-            
-            let imgs = caseImages.map((url, i) => 
-                `<div class="image-box">
-                    <img src="${url}" 
-                         alt="صورة ${i+1}"
-                         style="width: 100%; height: 100%; object-fit: cover;">
-                </div>`
-            ).join('');
-            
-            const pdfUrl = pdfUrls[c.id] || '#';
-            
-            document.getElementById('caseBox').innerHTML = `
-                <h2 class="case-title">🔍 القضية ${caseIdx + 1}: ${c.title}</h2>
-                <div class="images-grid">${imgs}</div>
-                <button class="pdf-btn" onclick="downloadPDF('${pdfUrl}', '${c.title}')">
-                    📥 تحميل ملف PDF - ${c.title}
-                </button>
-                <input type="text" class="code-input" id="codeInput" placeholder="أدخل الشفرة السرية" onkeypress="if(event.key==='Enter') verify()">
-                <button class="code-btn" onclick="verify()">✓ تحقق من الشفرة</button>
-                <div class="message" id="msg"></div>
-                <div class="progress">📋 القضية ${caseIdx + 1} من 10</div>
-            `;
+
+        function startGame() {
+            if (!currentTeam || currentTeam.members.length === 0) { alert('⚠️ اختر فريقاً'); return; }
+            if (!gameStarted) {
+                gameStarted = true;
+                gameStartTime = new Date();
+                document.getElementById('timerBar').classList.add('active');
+                startTimer();
+                saveGameState();
+            }
+            document.getElementById('teamInfoCode').textContent = `🎯 الفريق: ${currentTeam.number} | ${currentTeam.members.join(', ')}`;
+            showScreen('codeScreen');
             document.getElementById('codeInput').focus();
         }
-        
-        function verify() {
-            let code = document.getElementById('codeInput').value.toUpperCase().trim();
-            let correct = cases[caseIdx].code;
-            let msg = document.getElementById('msg');
-            
-            if (code === correct) {
-                msg.textContent = '✅ صحيح! إجابة رائعة!';
+
+        function startTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                updateTimerDisplay();
+                if (timeRemaining === 300) {
+                    document.getElementById('timerBar').classList.add('warning');
+                    alert('⚠️ تحذير: 5 دقائق فقط متبقية!');
+                }
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    timeRemaining = 0;
+                    updateTimerDisplay();
+                    alert('⏱️ انتهى الوقت!');
+                    endGame();
+                }
+                saveGameState();
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const hours = Math.floor(timeRemaining / 3600);
+            const minutes = Math.floor((timeRemaining % 3600) / 60);
+            const seconds = timeRemaining % 60;
+            const timeStr = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            document.getElementById('timerDisplay').textContent = timeStr;
+        }
+
+        function verifyCode() {
+            const input = document.getElementById('codeInput').value.trim().toUpperCase();
+            const correctCode = CODES[currentTeam.codeIndex];
+            const msg = document.getElementById('codeMessage');
+            if (input === correctCode) {
+                msg.textContent = '✅ صحيح! تم فتح الملفات';
                 msg.className = 'message success';
-                burst();
-                stats.solved++;
-                allStats[team.id].solved = stats.solved;
-                setTimeout(() => {
-                    caseIdx < 9 ? showCase() : endGame(true);
-                }, 1500);
+                currentTeam.solved = true;
+                currentTeam.solveTime = new Date();
+                saveGameState();
+                setTimeout(() => showImages(), 1500);
             } else {
-                msg.textContent = '❌ خطأ! -15 دقيقة لجميع الفرق!';
+                currentTeam.attempts++;
+                timeRemaining = Math.max(0, timeRemaining - 900);
+                msg.innerHTML = `❌ خطأ! -15 دقيقة من الجميع<br>محاولات: ${currentTeam.attempts}`;
                 msg.className = 'message error';
-                stats.attempts++;
-                allStats[team.id].attempts = stats.attempts;
-                timeLeft = Math.max(0, timeLeft - 900);
+                updateTimerDisplay();
                 document.getElementById('codeInput').value = '';
+                document.getElementById('codeInput').focus();
+                saveGameState();
             }
         }
-        
-        function burst() {
-            for (let i = 0; i < 40; i++) {
-                let star = document.createElement('div');
-                star.className = 'star';
-                star.textContent = ['⭐', '✨', '🌟'][Math.floor(Math.random() * 3)];
-                let angle = (i / 40) * Math.PI * 2;
-                let dist = 150;
-                star.style.setProperty('--tx', Math.cos(angle) * dist + 'px');
-                star.style.setProperty('--ty', Math.sin(angle) * dist + 'px');
-                star.style.left = window.innerWidth / 2 + 'px';
-                star.style.top = window.innerHeight / 2 + 'px';
-                document.body.appendChild(star);
-                setTimeout(() => star.remove(), 1500);
+
+        function showImages() {
+            const grid = document.getElementById('imagesGrid');
+            grid.innerHTML = '';
+            for (let i = 1; i <= 8; i++) {
+                const imageBox = document.createElement('div');
+                imageBox.className = 'image-box';
+                imageBox.innerHTML = `<img src="https://via.placeholder.com/300x400?text=Case+${currentTeam.number}+Image+${i}" alt="صورة ${i}"><div class="image-label">صورة ${i}</div>`;
+                grid.appendChild(imageBox);
             }
+            showScreen('imagesScreen');
         }
-        
-        function downloadPDF(url, filename) {
-            let a = document.createElement('a');
-            a.href = url;
-            a.download = filename + '.pdf';
-            a.click();
-        }
-        
-        function endGame(win) {
-            clearInterval(timer);
-            if (win) {
-                allStats[team.id].failed = false;
-                showLeaderboard();
-            } else {
-                allStats[team.id].failed = true;
-                document.getElementById('failDetails').innerHTML = `
-                    <h3>${team.teamName || team.name}</h3>
-                    <p>⭐ القائد: ${team.leader}</p>
-                    <p>حل ${stats.solved}/10 قضايا</p>
-                    <p>المحاولات الخاطئة: ${stats.attempts}</p>
-                `;
-                showScreen('failScreen');
-            }
-        }
-        
-        function showLeaderboard() {
-            let sorted = Object.entries(allStats).map(([id, s]) => s)
-                .sort((a, b) => {
-                    if (a.failed !== b.failed) return a.failed ? 1 : -1;
-                    if (b.solved !== a.solved) return b.solved - a.solved;
-                    return a.attempts - b.attempts;
-                });
-            
-            let html = '';
-            sorted.forEach((s, i) => {
-                let medal = ['🥇', '🥈', '🥉'][i] || (i + 1);
-                html += `<tr>
-                    <td>${medal}</td>
-                    <td><strong>${s.name}</strong></td>
-                    <td>${s.leader}</td>
-                    <td>${s.attempts}</td>
-                    <td>${s.solved}/10</td>
-                    <td>${s.failed ? '❌ فشل' : '✅ نجح'}</td>
-                </tr>`;
+
+        function downloadAllImages() { alert('📥 سيتم تحميل الصور قريباً'); }
+        function backToTeams() { document.getElementById('codeInput').value = ''; document.getElementById('codeMessage').textContent = ''; showScreen('teamsScreen'); }
+        function endGame() { if (timerInterval) clearInterval(timerInterval); gameStarted = false; document.getElementById('timerBar').classList.remove('warning'); backToTeams(); }
+
+        function showStats() {
+            let html = '<h3 style="color: #d4af37; margin-top: 30px;">📊 الإحصائيات:</h3>';
+            html += '<table class="stats-table"><tr><th>الفريق</th><th>الأعضاء</th><th>الحالة</th><th>المحاولات</th></tr>';
+            teams.forEach(t => {
+                const status = t.solved ? '✅ مكتمل' : '❌ قيد المعالجة';
+                html += `<tr><td>الفريق ${t.number}</td><td>${t.members.length}/4</td><td>${status}</td><td>${t.attempts}</td></tr>`;
             });
-            
-            document.getElementById('leaderboardBody').innerHTML = html;
-            showScreen('leaderboardScreen');
+            html += '</table>';
+            document.getElementById('statsContainer').innerHTML = html;
         }
-        
-        function showScreen(id) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
+
+        function resetGame() {
+            if (confirm('⚠️ هل تريد إعادة تعيين اللعبة؟\nسيتم حذف جميع البيانات!')) {
+                localStorage.clear();
+                teams.forEach(t => { t.members = []; t.leader = null; t.solved = false; t.attempts = 0; });
+                gameStarted = false; timeRemaining = TOTAL_TIME; currentUser = null; currentTeam = null;
+                if (timerInterval) clearInterval(timerInterval);
+                document.getElementById('timerBar').classList.remove('active', 'warning');
+                alert('✅ تم إعادة تعيين اللعبة');
+                backToLogin();
+            }
         }
+
+        function backToLogin() { currentUser = null; currentTeam = null; document.getElementById('userNameInput').value = ''; showScreen('loginScreen'); }
+        function showScreen(screenId) { document.querySelectorAll('.screen').forEach(screen => screen.classList.remove('active')); document.getElementById(screenId).classList.add('active'); }
+
+        window.addEventListener('beforeunload', (e) => { if (gameStarted && currentTeam && !currentTeam.solved) { e.preventDefault(); e.returnValue = ''; } });
+        document.addEventListener('DOMContentLoaded', () => { loadGameState(); if (gameStarted) { document.getElementById('timerBar').classList.add('active'); updateTimerDisplay(); } });
     </script>
 </body>
 </html>
